@@ -1,5 +1,15 @@
 return {
   {
+    "mason.nvim",
+    opts = function(_, opts)
+      -- Mason installs these with python3 -m venv, which fails until
+      -- python3.12-venv is installed. cmakelint itself lives in ~/.local/bin.
+      opts.ensure_installed = vim.tbl_filter(function(name)
+        return name ~= "cmakelint" and name ~= "cmakelang"
+      end, opts.ensure_installed or {})
+    end,
+  },
+  {
     "Civitasv/cmake-tools.nvim",
     opts = {
       cmake_automatic_configuration = false,
@@ -8,7 +18,7 @@ return {
       cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" },
       cmake_compile_commands_options = {
         action = "soft_link",
-        target = vim.loop.cwd,
+        target = vim.uv.cwd(),
       },
       cmake_executor = {
         name = "quickfix",

@@ -4,10 +4,7 @@ return {
     opts = {
       servers = {
         neocmake = {
-          root_dir = function(fname)
-            local util = require("lspconfig.util")
-            return util.root_pattern("CMakePresets.json", "CMakeLists.txt")(fname) or util.dirname(fname)
-          end,
+          root_markers = { "CMakePresets.json", "CMakeLists.txt" },
           init_options = {
             scan_cmake_in_package = false,
             semantic_token = true,

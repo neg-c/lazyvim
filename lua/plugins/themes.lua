@@ -58,6 +58,15 @@ return {
     "folke/snacks.nvim",
     opts = {
       picker = {
+        win = {
+          input = {
+            wo = {
+              -- The prompt is one line, with the match count on the right.
+              -- The global sidescrolloff scrolls that line before it is full.
+              sidescrolloff = 0,
+            },
+          },
+        },
         sources = {
           colorschemes = {
             preview = function(ctx)

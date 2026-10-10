@@ -4,6 +4,11 @@ return {
     dependencies = {
       { "ColinKennedy/mega.cmdparse", dependencies = { "ColinKennedy/mega.logging" } },
     },
+    keys = {
+      { "<leader>am", "<cmd>AvanteACPModes<CR>", desc = "Select ACP mode" },
+      { "<leader>aM", "<cmd>AvanteACPModels<CR>", desc = "Select ACP model" },
+      { "<leader>ap", false },
+    },
     opts = {
       provider = "cursor",
       mode = "agentic",

@@ -28,6 +28,49 @@ int main() {
 }
 ]]
 
+local scheme_file = vim.fn.stdpath("state") .. "/colorscheme"
+
+local function saved_colorscheme()
+  if vim.fn.filereadable(scheme_file) == 0 then
+    return nil
+  end
+  local name = vim.trim(vim.fn.readfile(scheme_file)[1] or "")
+  return name ~= "" and name or nil
+end
+
+local function picker_open()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local ft = vim.bo[vim.api.nvim_win_get_buf(win)].filetype
+    if ft == "snacks_picker_input" or ft == "snacks_picker_list" then
+      return true
+    end
+  end
+  return false
+end
+
+-- Remember a confirmed colorscheme. Skip startup and picker preview, which
+-- also fire ColorScheme while the previous scheme is still the one to keep.
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("persist_colorscheme", { clear = true }),
+  callback = function()
+    if not vim.g.colorscheme_persist or picker_open() then
+      return
+    end
+    local name = vim.g.colors_name
+    if not name or name == "" or name == "default" then
+      return
+    end
+    vim.fn.writefile({ name }, scheme_file)
+  end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    vim.g.colorscheme_persist = true
+  end,
+})
+
 local function show_snippet(ctx)
   if not ctx.preview.win:valid() then
     return
@@ -39,6 +82,18 @@ local function show_snippet(ctx)
 end
 
 return {
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = function()
+        local name = saved_colorscheme()
+        if name and pcall(vim.cmd.colorscheme, name) then
+          return
+        end
+        require("tokyonight").load()
+      end,
+    },
+  },
   {
     "nvchad/base46",
     branch = "v3.0",

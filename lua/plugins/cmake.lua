@@ -1,5 +1,13 @@
 return {
   {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      -- neocmake advertises formatting and then returns the buffer unchanged.
+      opts.formatters_by_ft.cmake = { "cmake_format" }
+    end,
+  },
+  {
     "mason.nvim",
     opts = function(_, opts)
       -- Mason installs these with python3 -m venv, which fails until

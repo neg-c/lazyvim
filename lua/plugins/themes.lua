@@ -85,13 +85,22 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
+      -- Default matches Kitty Catppuccin-Mocha (video CRT look is Kitty shaders +
+      -- Catppuccin/Tokyo Night). Persisted scheme still wins when readable.
       colorscheme = function()
         local name = saved_colorscheme()
         if name and pcall(vim.cmd.colorscheme, name) then
           return
         end
-        require("tokyonight").load()
+        vim.cmd.colorscheme("catppuccin")
       end,
+    },
+  },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    opts = {
+      flavour = "mocha",
     },
   },
   {
